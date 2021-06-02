@@ -1,9 +1,6 @@
 package com.company;
 
-import org.openqa.selenium.Alert;
-import org.openqa.selenium.By;
-import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.WebElement;
+import org.openqa.selenium.*;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
@@ -18,6 +15,8 @@ public class Main {
     private static WebDriver driver = null;
     private static String Ip = null;
     private static WebDriverWait wait = null;
+    private static int fqdn = 0;
+    private static JavascriptExecutor js = null;
 
     public static void main(String[] args) throws InterruptedException {
         runTest();
@@ -35,13 +34,15 @@ public class Main {
 
 
 
+
         while (true) {
 
             System.out.println(" -- Di Auto TEST / Menu --");
             System.out.println("1: Initial Settings");
             System.out.println("2: General settings");
-            System.out.println("3: Download Alert");
-            System.out.println("4: Settings");
+            System.out.println("3: Settings Server&Domain");
+            System.out.println("4: Download Alert");
+            System.out.println("5: Settings");
             System.out.print("Choose Action : ");
 
 
@@ -52,8 +53,9 @@ public class Main {
             else if (menu == 2)
                 settingsGeneral();
             else if (menu == 3)
+                settinigsServerAndDomain();
+            else if (menu == 4)
                 downloadAlert();
-
 
 
         }
@@ -62,6 +64,36 @@ public class Main {
 
         //driver.manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS);
         //googleSecurityPage(driver);
+
+
+    }
+
+    private static void settinigsServerAndDomain() throws InterruptedException{
+
+        driver = setIpAndChromeDriver();
+        setImplicitWait(driver);
+        setExplicitWait(driver);
+        googleSecurityPage(driver);
+        logIn(driver);
+        dashboardHudOverviewPage.anchorSettings(driver).click();
+        wait.until(ExpectedConditions.elementToBeClickable(By.cssSelector("a[href*=\"/dashboard/settings-server/\"]")));
+        dashboardHudOverviewPage.anchorServerAndDomain(driver).click();
+        settingsServerAndDomain.inputDns1(driver).clear();
+        settingsServerAndDomain.inputDns1(driver).sendKeys("192.168.1.1");
+        settingsServerAndDomain.inputDns2(driver).click();
+        wait.until(ExpectedConditions.elementToBeClickable(By.xpath("//*[@id=\"settings-server\"]/div[2]/div[3]/button")));
+        settingsServerAndDomain.buttonDnsSave(driver).click();
+        settingsServerAndDomain.inputNetworkTime(driver).clear();
+        settingsServerAndDomain.inputNetworkTime(driver).sendKeys("time.google.com");
+        settingsServerAndDomain.inputDns2(driver).click();
+        settingsServerAndDomain.buttonTimeSave(driver).click();
+        settingsServerAndDomain.inputFqdn(driver).clear();
+        settingsServerAndDomain.inputFqdn(driver).sendKeys("mmva"+fqdn+".di.local");
+        Thread.sleep(4000);
+        settingsServerAndDomain.buttonFqdnSave(driver).click();
+        Thread.sleep(4000);
+        System.out.println("Done");
+        driver.quit();
 
 
     }
@@ -104,9 +136,11 @@ public class Main {
 
     private static void settingsGeneral() throws InterruptedException{
         driver = setIpAndChromeDriver();
+
         setImplicitWait(driver);
         setExplicitWait(driver);
         googleSecurityPage(driver);
+        driver.manage().window().maximize();
         logIn(driver);
         dashboardHudOverviewPage.anchorSettings(driver).click();
         wait.until(ExpectedConditions.elementToBeClickable(By.cssSelector("a[href*=\"/dashboard/settings-general/\"]")));
@@ -115,11 +149,17 @@ public class Main {
         settingsGeneral.inputSiteName(driver).sendKeys("AZZIMUT");
         settingsGeneral.inputSiteLocation(driver).clear();
         settingsGeneral.inputSiteLocation(driver).sendKeys("TASHKENT");
+        js.executeScript("arguments[0].scrollIntoView();", settingsGeneral.inputLicenseEmail(driver));
         settingsGeneral.dropdownTimeZone(driver).click();
         settingsGeneral.inputTimeZoneSearch(driver).sendKeys("Tash");
+        Thread.sleep(2000);
+        settingsGeneral.dropdownTimeZoneOption(driver).click();
         settingsGeneral.inputSessionTimeOut(driver).clear();
         settingsGeneral.inputSessionTimeOut(driver).sendKeys("0");
         settingsGeneral.buttonSaveGhost(driver).click();
+        Thread.sleep(4000);
+        System.out.println("Done");
+        driver.quit();
 
 
     }
@@ -135,6 +175,9 @@ public class Main {
     private static ChromeDriver setIpAndChromeDriver(){
         driver = new ChromeDriver();
         driver.get("https://"+Ip+"");
+        driver.manage().window().maximize();
+        js = (JavascriptExecutor) driver;
+        fqdn =  ((int)Ip.charAt(Ip.length()-2) - '0')*10 +((int)Ip.charAt(Ip.length()-1) - '0');
         return (ChromeDriver) driver;
     }
 
@@ -145,11 +188,16 @@ public class Main {
     }
 
     private static void initilaSettings()  throws InterruptedException{
-        driver = new ChromeDriver();
-        driver.get("https://"+Ip+"");
-        driver.manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS);
+        driver = setIpAndChromeDriver();
+        setImplicitWait(driver);
+        setExplicitWait(driver);
+        driver.manage().window().maximize();
         googleSecurityPage(driver);
         diWelcomePage(driver);
+        Thread.sleep(4000);
+        System.out.println("Done");
+        driver.quit();
+
     }
 
     private static void diWelcomePage(WebDriver driver) throws InterruptedException {

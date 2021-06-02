@@ -17,7 +17,11 @@ public class settingsGeneral {
         return element;
     }
     public static WebElement dropdownTimeZone(WebDriver driver){
-        element = driver.findElement(By.className("dropdown-placeholder-value"));
+        element = driver.findElement(By.xpath("//*[@id=\"settings-general\"]/div/div[2]/div[2]/div[1]/div/div/div[1]/span"));
+        return element;
+    }
+    public static WebElement dropdownTimeZoneOption(WebDriver driver){
+        element = driver.findElement(By.xpath("//*[@id=\"settings-general\"]/div[2]/div[2]/div[2]/div[1]/div/div/div[2]/ul/li[2]"));
         return element;
     }
     public static WebElement inputTimeZoneSearch(WebDriver driver){
@@ -26,6 +30,10 @@ public class settingsGeneral {
     }
     public static WebElement inputSessionTimeOut(WebDriver driver){
         element = driver.findElement(By.id("sessiontimeout"));
+        return element;
+    }
+    public static WebElement inputLicenseEmail(WebDriver driver){
+        element = driver.findElement(By.xpath("//*[@id=\"settings-general\"]/div[2]/div[1]/div[2]/div[2]/div[1]/input"));
         return element;
     }
     public static WebElement buttonSaveGhost(WebDriver driver){

@@ -13,11 +13,15 @@ public class dashboardHudOverviewPage
 
 
     public static WebElement anchorSettings(WebDriver driver){
-        element = driver.findElement(By.cssSelector("a[data-hint*=\"Settings\"]"));
+        element = driver.findElement(By.xpath("/html/body/aside/nav/ul/li[5]/a"));
         return element;
     }
     public static WebElement anchorSettingsGeneral(WebDriver driver){
         element = driver.findElement(By.cssSelector("a[href*=\"/dashboard/settings-general/\"]"));
+        return element;
+    }
+    public static WebElement anchorServerAndDomain(WebDriver driver){
+        element = driver.findElement(By.cssSelector("a[href*=\"/dashboard/settings-server/\"]"));
         return element;
     }
     public static WebElement anchorAlerts(WebDriver driver){
